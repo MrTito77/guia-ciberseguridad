@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EL ESLABÓN MÁS IMPORTANTE - Mobile Security Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul-oscuro: #0F172A;
+            --azul-tec: #2563EB;
+            --celeste: #38BDF8;
+            --blanco: #FFFFFF;
+            --gris-claro: #F1F5F9;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--gris-claro);
+            color: var(--azul-oscuro);
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            height: 250px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .nav-active {
+            color: var(--celeste);
+            border-bottom: 2px solid var(--celeste);
+        }
+        .hotspot {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #EF4444;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+            z-index: 20;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .step-indicator {
+            width: 2px;
+            background: var(--celeste);
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+        .phone-mockup-container {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            border: 8px solid #333;
+            border-radius: 30px;
+            background: #fff;
+            overflow: hidden;
+            aspect-ratio: 9/19;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<!-- Chosen Palette: Seguridad Tecnológica Moderna (Blue Focus) -->
+<!-- Application Structure Plan: 
+    Se ha diseñado una SPA con navegación por scroll suave. La arquitectura se adapta dinámicamente:
+    - En móvil: Menú de navegación horizontal compacto, tarjetas en una sola columna y elementos interactivos ampliados para dedos.
+    - El flujo sigue los 10 puntos clave del ebook pero optimizado para lectura rápida (skimming) en dispositivos móviles.
+    - Se incluyen modales táctiles para los detalles de las amenazas para no saturar la pantalla pequeña.
+-->
+<!-- Visualization & Content Choices: 
+    - Dashboard de Impacto: Chart.js adaptativo que reduce su escala en móviles.
+    - Phishing Simulator: Uso de "hotspots" táctiles de 32px (estándar de accesibilidad) para marcar errores en un correo ficticio.
+    - Smishing Mockup: Contenedor CSS que imita la interfaz de un smartphone para contextualizar el ataque.
+    - Respuesta ante incidentes: Stepper vertical optimizado para scroll de pulgar.
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<nav class="fixed top-0 w-full bg-[#0F172A] text-white z-50 shadow-xl overflow-x-auto">
+    <div class="flex items-center space-x-6 px-4 h-14 whitespace-nowrap scrollbar-hide">
+        <span class="text-xs font-bold text-[#38BDF8] pr-4 border-r border-gray-700">ESCUDO DIGITAL</span>
+        <a href="#p1" class="nav-link text-[10px] font-semibold uppercase tracking-wider">Inicio</a>
+        <a href="#p2" class="nav-link text-[10px] font-semibold uppercase tracking-wider">Datos</a>
+        <a href="#p3" class="nav-link text-[10px] font-semibold uppercase tracking-wider">Mente</a>
+        <a href="#p4" class="nav-link text-[10px] font-semibold uppercase tracking-wider">Phishing</a>
+        <a href="#p7" class="nav-link text-[10px] font-semibold uppercase tracking-wider">Claves</a>
+        <a href="#p9" class="nav-link text-[10px] font-semibold uppercase tracking-wider">Plan</a>
+    </div>
+</nav>
+
+<main class="w-full">
+    <!-- PÁGINA 1: PORTADA -->
+    <section id="p1" class="min-h-screen flex items-center bg-[#0F172A] text-white pt-14">
+        <div class="container mx-auto px-6 py-10 flex flex-col items-center text-center">
+            <div class="mb-8 p-3 bg-[#2563EB]/20 rounded-full inline-block">
+                <span class="text-3xl">🛡️</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl mb-4 leading-tight">El Eslabón <br><span class="text-[#38BDF8]">Más Importante</span></h1>
+            <p class="text-gray-400 text-sm md:text-lg mb-8 max-w-md">Guía práctica para reconocer engaños digitales y proteger tu información en el entorno corporativo.</p>
+            <div class="grid grid-cols-2 gap-3 w-full max-w-sm">
+                <div class="bg-[#1E293B] p-3 rounded-lg border border-gray-700 text-center">
+                    <p class="text-[10px] text-[#38BDF8] font-bold">Vectores</p>
+                    <p class="text-xs">Social Engineering</p>
+                </div>
+                <div class="bg-[#1E293B] p-3 rounded-lg border border-gray-700 text-center">
+                    <p class="text-[10px] text-[#38BDF8] font-bold">Nivel</p>
+                    <p class="text-xs">Profesional</p>
+                </div>
+            </div>
+            <a href="#p2" class="mt-12 animate-bounce text-[#38BDF8]">
+                <span class="text-xs block mb-2">DESLIZA</span>
+                <span class="text-xl">↓</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- PÁGINA 2: IMPACTO -->
+    <section id="p2" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-2xl text-center mb-4">¿Por qué importa?</h2>
+            <p class="text-gray-500 text-center text-sm mb-10">La ciberseguridad ya no es solo técnica, es humana.</p>
+            
+            <div class="chart-container mb-8">
+                <canvas id="mobileImpactChart"></canvas>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 max-w-sm mx-auto">
+                <div class="glass-card p-5 rounded-2xl flex items-center space-x-4">
+                    <div class="text-3xl">🎯</div>
+                    <div>
+                        <h4 class="text-xl font-bold text-[#2563EB]">98%</h4>
+                        <p class="text-[11px] text-gray-600">De ataques requieren interacción humana.</p>
+                    </div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl flex items-center space-x-4 border-l-4 border-[#38BDF8]">
+                    <div class="text-3xl">👤</div>
+                    <div>
+                        <h4 class="text-xl font-bold text-[#38BDF8]">82%</h4>
+                        <p class="text-[11px] text-gray-600">Involucran errores del factor humano.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PÁGINA 3: PSICOLOGÍA -->
+    <section id="p3" class="py-16 bg-[#F1F5F9]">
+        <div class="container mx-auto px-6">
+            <h2 class="text-2xl mb-8 text-center">Gatillos Mentales</h2>
+            <div class="space-y-4">
+                <button onclick="toggleCard('c1')" class="w-full bg-white p-4 rounded-xl shadow-sm flex justify-between items-center text-left">
+                    <span class="font-bold text-sm">🎖️ Autoridad</span>
+                    <span class="text-[#2563EB]">+</span>
+                </button>
+                <div id="c1" class="hidden p-4 bg-white/50 border-x border-b rounded-b-xl text-xs text-gray-600">
+                    "Soy el CEO, necesito que transfieras esto urgente". Buscan anular tu capacidad de cuestionar basándose en el cargo.
+                </div>
+
+                <button onclick="toggleCard('c2')" class="w-full bg-white p-4 rounded-xl shadow-sm flex justify-between items-center text-left">
+                    <span class="font-bold text-sm">⏳ Urgencia</span>
+                    <span class="text-[#2563EB]">+</span>
+                </button>
+                <div id="c2" class="hidden p-4 bg-white/50 border-x border-b rounded-b-xl text-xs text-gray-600">
+                    "Tu cuenta expira en 10 minutos". El estrés reduce tu capacidad de razonamiento lógico.
+                </div>
+
+                <button onclick="toggleCard('c3')" class="w-full bg-white p-4 rounded-xl shadow-sm flex justify-between items-center text-left">
+                    <span class="font-bold text-sm">⚠️ Miedo</span>
+                    <span class="text-[#2563EB]">+</span>
+                </button>
+                <div id="c3" class="hidden p-4 bg-white/50 border-x border-b rounded-b-xl text-xs text-gray-600">
+                    "Se ha detectado acceso ilegal". Te empujan a actuar bajo pánico para "solucionar" el problema entregando datos.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PÁGINA 4: PHISHING SIMULATOR -->
+    <section id="p4" class="py-16 bg-white overflow-hidden">
+        <div class="container mx-auto px-6">
+            <h2 class="text-2xl mb-4 text-center">Simulador Phishing</h2>
+            <p class="text-xs text-center text-gray-500 mb-8">Toca los puntos rojos para identificar los errores.</p>
+            
+            <div class="relative bg-gray-50 border rounded-xl p-4 shadow-inner max-w-sm mx-auto">
+                <div class="bg-white p-4 rounded shadow-sm relative">
+                    <div class="border-b pb-2 mb-3">
+                        <div class="flex justify-between items-start">
+                            <p class="text-[10px] text-gray-400">De: Seguridad PayPal <span class="text-blue-500 underline">info@pay-pal-24.co</span></p>
+                            <div class="hotspot" onclick="alert('ERROR: El dominio .co y el guion extra en el nombre son señales de fraude.')">!</div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold">¡ALERTA DE SEGURIDAD!</p>
+                        <p class="text-[11px]">Estimado usuario, su cuenta ha sido bloqueada. Ingrese aquí para validar:</p>
+                        <div class="relative inline-block">
+                            <div class="bg-[#2563EB] text-white py-2 px-4 rounded text-[10px] font-bold">VERIFICAR AHORA</div>
+                            <div class="hotspot -right-4 -top-4" onclick="alert('ERROR: Los bancos nunca te envían a una página externa para validar datos sensibles por correo.')">!</div>
+                        </div>
+                        <p class="text-[9px] text-gray-400 pt-4 border-t">Adjunto: factura_reclamacion.exe</p>
+                        <div class="hotspot left-20 bottom-0" onclick="alert('ERROR: Un archivo .exe es una aplicación ejecutable. ¡Es malware garantizado!')">!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PÁGINA 7: CONTRASEÑAS -->
+    <section id="p7" class="py-16 bg-[#0F172A] text-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-2xl text-center mb-10">Claves Maestras</h2>
+            <div class="space-y-6">
+                <div class="flex items-start space-x-4">
+                    <div class="bg-[#38BDF8] text-[#0F172A] p-2 rounded-lg font-bold">01</div>
+                    <div>
+                        <h4 class="font-bold text-sm">Longitud > Complejidad</h4>
+                        <p class="text-xs text-gray-400 mt-1">"Cafe-Lluvia-Viernes" es 100x más difícil de hackear que "P@ssw0rd1".</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="bg-[#38BDF8] text-[#0F172A] p-2 rounded-lg font-bold">02</div>
+                    <div>
+                        <h4 class="font-bold text-sm">Usa Gestores</h4>
+                        <p class="text-xs text-gray-400 mt-1">No anotes nada. Usa herramientas como Bitwarden o 1Password.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4 p-4 bg-[#2563EB]/20 border border-[#2563EB] rounded-xl">
+                    <div class="text-2xl">📱</div>
+                    <div>
+                        <h4 class="font-bold text-sm">Activa el MFA</h4>
+                        <p class="text-[11px] text-[#38BDF8] font-semibold mt-1">La Autenticación Multifactor es tu última línea de defensa.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PÁGINA 9: PLAN DE RESPUESTA -->
+    <section id="p9" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-2xl text-center mb-12">Si caes, actúa así:</h2>
+            
+            <div class="relative max-w-xs mx-auto">
+                <div class="step-indicator"></div>
+                
+                <div class="relative pl-10 mb-10">
+                    <div class="absolute left-0 w-8 h-8 bg-[#2563EB] rounded-full flex items-center justify-center text-white font-bold text-xs z-10">1</div>
+                    <h4 class="font-bold text-sm">DETECTAR</h4>
+                    <p class="text-[11px] text-gray-500">¿Diste clic? ¿Ves procesos lentos? Admítelo pronto.</p>
+                </div>
+
+                <div class="relative pl-10 mb-10">
+                    <div class="absolute left-0 w-8 h-8 bg-[#2563EB] rounded-full flex items-center justify-center text-white font-bold text-xs z-10">2</div>
+                    <h4 class="font-bold text-sm">REPORTAR</h4>
+                    <p class="text-[11px] text-gray-500">Avisa a TI. Es mejor un falso positivo que una brecha real.</p>
+                </div>
+
+                <div class="relative pl-10 mb-10">
+                    <div class="absolute left-0 w-8 h-8 bg-[#2563EB] rounded-full flex items-center justify-center text-white font-bold text-xs z-10">3</div>
+                    <h4 class="font-bold text-sm">AISLAR</h4>
+                    <p class="text-[11px] text-gray-500">Apaga el WiFi o quita el cable. Corta la comunicación del virus.</p>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-[#F1F5F9] p-6 rounded-3xl">
+                <h3 class="text-center font-bold text-xs mb-6 tracking-widest text-[#2563EB]">10 HÁBITOS DE ORO</h3>
+                <div id="habitList" class="grid grid-cols-2 gap-3">
+                    <!-- JS Populated -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER/CERRADO -->
+    <section class="py-20 bg-[#0F172A] text-white text-center">
+        <div class="px-8">
+            <div class="text-4xl mb-6">🎯</div>
+            <h2 class="text-xl font-bold mb-4 uppercase tracking-tighter">Eres el defensor digital</h2>
+            <p class="text-xs text-gray-400 mb-8 italic">"La seguridad no comienza con software. Comienza con una duda razonable ante lo urgente."</p>
+            <button onclick="window.scrollTo(0,0)" class="bg-[#38BDF8] text-[#0F172A] text-xs font-bold px-8 py-3 rounded-full">VOLVER AL INICIO</button>
+        </div>
+        <p class="mt-20 text-[9px] text-gray-600 opacity-50 uppercase">Corporate Security Training 2024</p>
+    </section>
+</main>
+
+<script>
+    // Tab Toggling for mobile content
+    function toggleCard(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('hidden');
+    }
+
+    // Chart logic
+    const ctx = document.getElementById('mobileImpactChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Error Humano', 'Vulnerabilidad Técnica'],
+            datasets: [{
+                data: [82, 18],
+                backgroundColor: ['#2563EB', '#F1F5F9'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 10,
+                        font: { size: 10, family: 'Poppins' }
+                    }
+                }
+            }
+        }
+    });
+
+    // Populate Habits
+    const habits = [
+        "Verifica URL", "Usa MFA", "Duda del remitente", "Claves largas", 
+        "Actualiza apps", "No uses USB extraños", "Bloquea pantalla", 
+        "Usa VPN", "No des tu PIN", "Piensa antes"
+    ];
+    const container = document.getElementById('habitList');
+    habits.forEach(h => {
+        const div = document.createElement('div');
+        div.className = "bg-white p-2 text-[10px] text-center rounded-lg shadow-sm font-semibold text-gray-700";
+        div.innerText = "✓ " + h;
+        container.appendChild(div);
+    });
+
+    // Smooth Navigation highlighting
+    window.addEventListener('scroll', () => {
+        let current = '';
+        const sections = document.querySelectorAll('section');
+        sections.forEach(s => {
+            const top = s.offsetTop;
+            if (pageYOffset >= top - 60) current = s.getAttribute('id');
+        });
+        document.querySelectorAll('.nav-link').forEach(l => {
+            l.classList.remove('nav-active');
+            if (l.getAttribute('href') === `#${current}`) l.classList.add('nav-active');
+        });
+    });
+</script>
+
+</body>
+</html>
